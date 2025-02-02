@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Lung Cancer Diagnosis</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+  </head>
+  <!-- Add this before </body> -->
+  <div class="loading-overlay" id="loadingOverlay">
+    <div class="loading-content">
+      <div class="loading-dots">
+        <div class="loading-dot"></div>
+        <div class="loading-dot"></div>
+        <div class="loading-dot"></div>
+      </div>
+      <div class="processing-bar">
+        <div class="processing-progress" id="processingProgress"></div>
+      </div>
+      <div class="countdown" id="countdown">Analyzing results...</div>
+    </div>
+  </div>
+
+  <script>
+    function showLoading(event) {
+      event.preventDefault();
+      const overlay = document.getElementById("loadingOverlay");
+      const progress = document.getElementById("processingProgress");
+      const countdown = document.getElementById("countdown");
+
+      // Show loading overlay
+      overlay.style.display = "flex";
+
+      // Start progress animation
+      progress.style.width = "100%";
+
+      // Start countdown
+      let seconds = 5;
+      const countdownInterval = setInterval(() => {
+        countdown.textContent = `Analyzing results... ${seconds}s remaining`;
+        seconds--;
+      }, 1000);
+
+      // Submit form after delay
+      setTimeout(() => {
+        clearInterval(countdownInterval);
+        event.target.submit();
+      }, 5000);
+    }
+  </script>
+  <body>
+    <div class="container">
+      <h1><i class="fas fa-lungs"></i> Lung Health Assessment</h1>
+
+      <!-- Progress Bar -->
+      <div class="progress">
+        <div class="progress-bar"></div>
+      </div>
+
+      <form action="/diagnose" method="post" onsubmit="showLoading(event)">
+        <!-- Personal Information Section -->
+        <fieldset class="form-section">
+          <legend><i class="fas fa-user"></i> Personal Information</legend>
+
+          <div class="form-group">
+            <label><i class="fas fa-venus-mars"></i> Gender:</label>
+            <select name="GENDER" required>
+              <option value="M">Male</option>
+              <option value="F">Female</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label><i class="fas fa-birthday-cake"></i> Age:</label>
+            <input type="number" name="AGE" min="1" max="100" required />
+          </div>
+        </fieldset>
+
+        <!-- Lifestyle Factors Section -->
+        <fieldset class="form-section">
+          <legend><i class="fas fa-heartbeat"></i> Lifestyle Factors</legend>
+
+          <div class="form-group">
+            <label><i class="fas fa-smoking"></i> Smoking:</label>
+            <select name="SMOKING" required>
+              <option value="YES">Yes</option>
+              <option value="NO">No</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label><i class="fas fa-hand-sparkles"></i> Yellow Fingers:</label>
+            <select name="YELLOW_FINGERS" required>
+              <option value="YES">Yes</option>
+              <option value="NO">No</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label
+              ><i class="fas fa-wine-glass-alt"></i> Alcohol Consuming:</label
+            >
+            <select name="ALCOHOL_CONSUMING" required>
+              <option value="YES">Yes</option>
+              <option value="NO">No</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label><i class="fas fa-users"></i> Peer Pressure:</label>
+            <select name="PEER_PRESSURE" required>
+              <option value="YES">Yes</option>
+              <option value="NO">No</option>
+            </select>
+          </div>
+        </fieldset>
+
+        <!-- Health Symptoms Section -->
+        <fieldset class="form-section">
+          <legend>
+            <i class="fas fa-thermometer-half"></i> Health Symptoms
+          </legend>
+
+          <div class="form-group">
+            <label><i class="fas fa-cough"></i> Coughing:</label>
+            <select name="COUGHING" required>
+              <option value="YES">Yes</option>
+              <option value="NO">No</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label><i class="fas fa-wind"></i> Shortness of Breath:</label>
+            <select name="SHORTNESS_OF_BREATH" required>
+              <option value="YES">Yes</option>
+              <option value="NO">No</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label
+              ><i class="fas fa-comment-medical"></i> Swallowing
+              Difficulty:</label
+            >
+            <select name="SWALLOWING_DIFFICULTY" required>
+              <option value="YES">Yes</option>
+              <option value="NO">No</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label><i class="fas fa-heartbeat"></i> Chest Pain:</label>
+            <select name="CHEST_PAIN" required>
+              <option value="YES">Yes</option>
+              <option value="NO">No</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label><i class="fas fa-head-side-virus"></i> Wheezing:</label>
+            <select name="WHEEZING" required>
+              <option value="YES">Yes</option>
+              <option value="NO">No</option>
+            </select>
+          </div>
+        </fieldset>
+
+        <!-- Medical History Section -->
+        <fieldset class="form-section">
+          <legend><i class="fas fa-file-medical"></i> Medical History</legend>
+
+          <div class="form-group">
+            <label><i class="fas fa-brain"></i> Anxiety:</label>
+            <select name="ANXIETY" required>
+              <option value="YES">Yes</option>
+              <option value="NO">No</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label><i class="fas fa-disease"></i> Chronic Disease:</label>
+            <select name="CHRONIC_DISEASE" required>
+              <option value="YES">Yes</option>
+              <option value="NO">No</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label><i class="fas fa-allergies"></i> Allergy:</label>
+            <select name="ALLERGY" required>
+              <option value="YES">Yes</option>
+              <option value="NO">No</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label><i class="fas fa-tired"></i> Fatigue:</label>
+            <select name="FATIGUE" required>
+              <option value="YES">Yes</option>
+              <option value="NO">No</option>
+            </select>
+          </div>
+        </fieldset>
+
+        <!-- Loading Animation -->
+        <div class="loading" id="loading">
+          <div class="loading-dot"></div>
+          <div class="loading-dot"></div>
+          <div class="loading-dot"></div>
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit">
+          <i class="fas fa-stethoscope"></i> Get Diagnosis Report
+        </button>
+      </form>
+    </div>
+
+    <script>
+      function showLoading(event) {
+        event.preventDefault(); // Prevent immediate form submission
+        const form = event.target;
+        const overlay = document.getElementById("loadingOverlay");
+        const progress = document.getElementById("processingProgress");
+        const countdown = document.getElementById("countdown");
+
+        // Show loading overlay
+        overlay.style.display = "flex";
+
+        // Reset and start progress animation
+        progress.style.width = "0%";
+        setTimeout(() => (progress.style.width = "100%"), 50);
+
+        // Start countdown
+        let seconds = 5;
+        countdown.textContent = `Analyzing results... ${seconds}s remaining`;
+
+        const countdownInterval = setInterval(() => {
+          seconds--;
+          countdown.textContent = `Analyzing results... ${seconds}s remaining`;
+          if (seconds <= 0) clearInterval(countdownInterval);
+        }, 1000);
+
+        // Submit form after 5 seconds
+        setTimeout(() => {
+          form.submit();
+          overlay.style.display = "none"; // Hide overlay if submit fails
+        }, 5000);
+      }
+    </script>
+  </body>
+</html>

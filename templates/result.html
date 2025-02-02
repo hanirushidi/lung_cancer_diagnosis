@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Results</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+  </head>
+  <body>
+    <div class="container result">
+      <h1><i class="fas fa-file-medical"></i> Diagnosis Report</h1>
+
+      <div
+        class="result-box {% if prediction %}positive{% else %}negative{% endif %}"
+      >
+        <div class="risk-meter">
+          <div class="risk-fill" style="width: {{ probability * 100 }}%"></div>
+        </div>
+
+        <h2>
+          Risk Probability: {{ "%.1f"|format(probability * 100) }}%
+          <span class="risk-level"
+            >{{ 'High Risk' if prediction else 'Low Risk' }}</span
+          >
+        </h2>
+
+        <div class="indicators">
+          <h4><i class="fas fa-exclamation-triangle"></i> Key Risk Factors</h4>
+          <ul>
+            {% for indicator, importance in indicators.items() %}
+            <li>
+              <span>{{ indicator.replace('_', ' ').title() }}</span>
+              <span>{{ "%.1f"|format(importance * 100) }}%</span>
+            </li>
+            {% endfor %}
+          </ul>
+        </div>
+
+        <div class="recommendations">
+          <h4><i class="fas fa-hand-holding-medical"></i> Recommendations</h4>
+          {% if prediction %}
+          <ul>
+            <li>
+              <i class="fas fa-phone"></i> Contact a healthcare professional
+              immediately
+            </li>
+            <li>
+              <i class="fas fa-calendar-check"></i> Schedule a CT scan within 48
+              hours
+            </li>
+            <li><i class="fas fa-ban"></i> Avoid smoking and air pollutants</li>
+          </ul>
+          {% else %}
+          <ul>
+            <li>
+              <i class="fas fa-calendar-alt"></i> Regular annual checkups
+              recommended
+            </li>
+            <li>
+              <i class="fas fa-apple-alt"></i> Maintain healthy lifestyle habits
+            </li>
+            <li>
+              <i class="fas fa-smoking-ban"></i> Avoid secondhand smoke exposure
+            </li>
+          </ul>
+          {% endif %}
+        </div>
+
+        <div class="medical-report-wrapper">{{ description|safe }}</div>
+      </div>
+
+      <a href="/" class="btn-new-assessment">
+        <i class="fas fa-redo"></i> New Assessment
+      </a>
+    </div>
+  </body>
+</html>
